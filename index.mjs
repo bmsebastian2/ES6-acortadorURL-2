@@ -8,8 +8,9 @@ const port = process.env.PORT || 3000;
 app.use(cors({ optionsSuccessStatus: 200 }));
 const options = {
   // Setting family as 6 i.e. IPv6
-  family: 6,
-  hints: dns.ADDRCONFIG | dns.V4MAPPED,
+  // family: 6,
+  // hints: dns.ADDRCONFIG | dns.V4MAPPED,
+  all: true,
 };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
