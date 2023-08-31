@@ -27,12 +27,11 @@ app.get("/", function (req, res) {
 app.post("/api/shorturl", function (req, res) {
   const ipAddres = req.body.url;
   console.log(ipAddres);
-  dns.lookup(
-    ipAddres,
-    options,
-    (err, address, family) => err && res.json({ error: "invalid url" })
+  dns.lookup(ipAddres, options, (err, address, family) =>
+    res.json(
+      err ? { error: "invalid url" } : { original_url: ipAddres, short_url: 1 }
+    )
   );
-  res.send({ original_url: ipAddres, short_url: 1 });
 });
 
 app.listen(port, function () {
