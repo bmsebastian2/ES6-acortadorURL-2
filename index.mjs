@@ -31,17 +31,11 @@ app.get("/", function (req, res) {
 
 app.post("/api/shorturl", function (req, res) {
   const ipAddres = req.body.url;
-  const shorUrl = getRandomInt(99);
-  // objectShort.id = ipAddres;
-  // objectShort[ipAddres].url = shorUrl;
-  //console.log(shorUrl);
-  //console.log(objectShort);
-  //console.log(objectShort["2"]);
+  const shorUrl = getRandomInt(9999);
+
   let object = { [`${shorUrl}`]: { url: ipAddres } };
   objectShort = object;
-  //console.log(objectShort);
 
-  //console.log(ipAddres);
   dns.lookup(ipAddres, options, (err, address, family) =>
     res.json(
       err
@@ -58,6 +52,9 @@ app.get("/api/shorturl/:short", function (req, res) {
   res.redirect(objectShort[short].url);
 });
 
+app.get("*", (req, res) => {
+  res.send("NOT FOUND");
+});
 app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
