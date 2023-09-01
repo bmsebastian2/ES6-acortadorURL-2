@@ -11,7 +11,9 @@ const options = {
   // Setting family as 6 i.e. IPv6
   // family: 6,
   // hints: dns.ADDRCONFIG | dns.V4MAPPED,
-  all: true,
+  //all: true,
+  family: 6,
+  hints: dns.ADDRCONFIG | dns.V4MAPPED,
 };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 let objectShort = {
@@ -32,6 +34,7 @@ app.get("/", function (req, res) {
 app.post("/api/shorturl", function (req, res) {
   const ipAddres = req.body.url;
   const shorUrl = getRandomInt(9999);
+  console.log(ipAddres);
 
   let object = { [`${shorUrl}`]: { url: ipAddres } };
   objectShort = object;
