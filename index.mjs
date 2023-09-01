@@ -32,18 +32,19 @@ app.get("/", function (req, res) {
 });
 
 app.post("/api/shorturl", function (req, res) {
-  const ipAddres = req.body.url;
+  const Addres = req.body.url;
+  if (Addres === "") return res.send({ error: "invalid url" });
   const shorUrl = getRandomInt(9999);
-  console.log(ipAddres);
+  console.log(Addres);
 
-  let object = { [`${shorUrl}`]: { url: ipAddres } };
+  let object = { [`${shorUrl}`]: { url: Addres } };
   objectShort = object;
 
-  dns.lookup(ipAddres, options, (err, address, family) =>
+  dns.lookup(Addres, options, (err, address, family) =>
     res.json(
       err
         ? { error: "invalid url" }
-        : { original_url: ipAddres, short_url: shorUrl }
+        : { original_url: Addres, short_url: shorUrl }
     )
   );
 });
