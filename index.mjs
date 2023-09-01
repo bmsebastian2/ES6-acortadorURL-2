@@ -12,7 +12,7 @@ const options = {
   // family: 6,
   // hints: dns.ADDRCONFIG | dns.V4MAPPED,
   //all: true,
-  family: 6,
+  family: 4,
   hints: dns.ADDRCONFIG | dns.V4MAPPED,
 };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
