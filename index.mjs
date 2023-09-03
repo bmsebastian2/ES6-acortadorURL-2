@@ -2,17 +2,14 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import dns from "dns";
-
+import { obtenerDominioDesdeURL } from "./obtenerDominioDesdeURL.mjs";
+import { esDominioValido } from "./esDominioValido.mjs";
 import * as url from "url";
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(cors({ optionsSuccessStatus: 200 }));
 const options = {
-  // Setting family as 6 i.e. IPv6
-  // family: 6,
-  // hints: dns.ADDRCONFIG | dns.V4MAPPED,
-  //all: true,
-  family: 4,
+  family: 6,
   hints: dns.ADDRCONFIG | dns.V4MAPPED,
 };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -32,27 +29,33 @@ app.get("/", function (req, res) {
 });
 
 app.post("/api/shorturl", function (req, res) {
-  const Addres = req.body.url;
-  if (Addres === "") return res.send({ error: "invalid url" });
+  const Address = req.body.url;
+  if (Address === "") return res.send({ error: "invalid url" });
   const shorUrl = getRandomInt(9999);
-  console.log(Addres);
-
-  let object = { [`${shorUrl}`]: { url: Addres } };
+  let object = { [`${shorUrl}`]: { url: Address } };
   objectShort = object;
 
-  dns.lookup(Addres, options, (err, address, family) =>
-    res.json(
-      err
-        ? { error: "invalid url" }
-        : { original_url: Addres, short_url: shorUrl }
-    )
-  );
+  const dominio = obtenerDominioDesdeURL(Address);
+
+  esDominioValido(obtenerDominioDesdeURL(dominio))
+    .then((resultado) => {
+      console.log(`El dominio ${dominio} es válido.`);
+      res.json({
+        original_url: Address,
+        short_url: shorUrl,
+      });
+    })
+    .catch((error) => {
+      console.error(
+        `El dominio ${dominio} no es válido o no se pudo resolver.`
+      );
+      res.json({ error: "invalid url" });
+    });
 });
+
 app.get("/api/shorturl/:short", function (req, res) {
   const { short } = req.params;
-  console.log(short);
-  console.log(objectShort);
-  console.log(objectShort[short].url);
+
   res.redirect(objectShort[short].url);
 });
 
