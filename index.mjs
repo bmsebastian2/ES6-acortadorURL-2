@@ -5,9 +5,11 @@ import dns from "dns";
 import { obtenerDominioDesdeURL } from "./obtenerDominioDesdeURL.mjs";
 import { esDominioValido } from "./esDominioValido.mjs";
 import * as url from "url";
+
 const app = express();
 const port = process.env.PORT || 3000;
-app.use(cors({ optionsSuccessStatus: 200 }));
+app.use(cors());
+
 const options = {
   family: 6,
   hints: dns.ADDRCONFIG | dns.V4MAPPED,
