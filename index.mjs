@@ -32,25 +32,25 @@ app.get("/", function (req, res) {
 
 app.post("/api/shorturl", function (req, res) {
   const Address = req.body.url;
-  if (Address === "") return res.send({ error: "invalid url" });
+  if (Address === "") return res.json({ error: "invalid url" });
   const shorUrl = getRandomInt(9999);
   let object = { [`${shorUrl}`]: { url: Address } };
   objectShort = object;
 
   const dominio = obtenerDominioDesdeURL(Address);
 
-  esDominioValido(obtenerDominioDesdeURL(dominio))
+  esDominioValido(dominio)
     .then((resultado) => {
-      console.log(`El dominio ${dominio} es válido.`);
+      //console.log(`El dominio ${dominio} es válido.`);
       res.json({
         original_url: Address,
         short_url: shorUrl,
       });
     })
     .catch((error) => {
-      console.error(
-        `El dominio ${dominio} no es válido o no se pudo resolver.`
-      );
+      // console.error(
+      //   `El dominio ${dominio} no es válido o no se pudo resolver.`
+      // );
       res.json({ error: "invalid url" });
     });
 });
