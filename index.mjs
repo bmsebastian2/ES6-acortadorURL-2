@@ -5,10 +5,12 @@ import dns from "dns";
 import { obtenerDominioDesdeURL } from "./obtenerDominioDesdeURL.mjs";
 import { esDominioValido } from "./esDominioValido.mjs";
 import * as url from "url";
+import bodyParser from "body-parser";
 
 const app = express();
-const port = process.env.PORT || 3000;
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+const port = process.env.PORT || 3000;
 
 const options = {
   family: 6,
@@ -40,14 +42,14 @@ app.post("/api/shorturl", function (req, res) {
   const dominio = obtenerDominioDesdeURL(Address);
 
   esDominioValido(dominio)
-    .then((resultado) => {
+    .then(() => {
       //console.log(`El dominio ${dominio} es válido.`);
       res.json({
         original_url: Address,
         short_url: shorUrl,
       });
     })
-    .catch((error) => {
+    .catch(() => {
       // console.error(
       //   `El dominio ${dominio} no es válido o no se pudo resolver.`
       // );
