@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import dns from "dns";
-import { obtenerDominioDesdeURL } from "./obtenerDominioDesdeURL.mjs";
+import { obtenerDominioDesdeURL2 } from "./obtenerDominioDesdeURL.mjs";
 import { esDominioValido } from "./esDominioValido.mjs";
 import * as url from "url";
 import bodyParser from "body-parser";
@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const port = process.env.PORT || 3000;
 
 const options = {
-  family: 6, 
+  family: 6,
   hints: dns.ADDRCONFIG | dns.V4MAPPED,
 };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -39,7 +39,7 @@ app.post("/api/shorturl", function (req, res) {
   let object = { [`${shorUrl}`]: { url: Address } };
   objectShort = object;
 
-  const dominio = obtenerDominioDesdeURL(Address);
+  const dominio = obtenerDominioDesdeURL2(Address);
 
   esDominioValido(dominio)
     .then(() => {
