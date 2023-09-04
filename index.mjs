@@ -2,7 +2,10 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import dns from "dns";
-import { obtenerDominioDesdeURL2 } from "./obtenerDominioDesdeURL.mjs";
+import {
+  obtenerDominioDesdeURL2,
+  obtenerDominioDesdeURL,
+} from "./obtenerDominioDesdeURL.mjs";
 import { esDominioValido } from "./esDominioValido.mjs";
 import * as url from "url";
 import bodyParser from "body-parser";
@@ -12,10 +15,10 @@ app.use(cors({ optionsSuccessStatus: 200 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 const port = process.env.PORT || 3000;
 
-const options = {
-  family: 6,
-  hints: dns.ADDRCONFIG | dns.V4MAPPED,
-};
+// const options = {
+//   family: 6,
+//   hints: dns.ADDRCONFIG | dns.V4MAPPED,
+// };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 let objectShort = {
   2: {
@@ -24,7 +27,6 @@ let objectShort = {
 };
 //app.use(express.static(path.join(__dirname + "/public")));
 app.use(express.static("public"));
-
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -36,16 +38,17 @@ app.post("/api/shorturl", function (req, res) {
   const Address = req.body.url;
   if (Address === "") return res.json({ error: "invalid url" });
   const shorUrl = getRandomInt(9999);
-  let object = { [`${shorUrl}`]: { url: Address } };
-  objectShort = object;
 
-  const dominio = obtenerDominioDesdeURL2(Address);
+  // const dominio = obtenerDominioDesdeURL2(Address);
+  // console.log(dominio);
 
-  esDominioValido(dominio)
+  esDominioValido(Address)
     .then(() => {
       //console.log(`El dominio ${dominio} es válido.`);
+      let object = { [`${shorUrl}`]: { url: Address } };
+      objectShort = object;
       res.json({
-        original_url: Address,
+        original_url: Address.replace(/\/$/, ""),
         short_url: shorUrl,
       });
     })
