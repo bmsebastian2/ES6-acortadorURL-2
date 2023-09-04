@@ -20,10 +20,8 @@ const port = process.env.PORT || 3000;
 //   hints: dns.ADDRCONFIG | dns.V4MAPPED,
 // };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
-let objectShort = {
-  2: {
-    url: "hhhtp:akslskdlks",
-  },
+const urlsObjeto = {
+  url: [],
 };
 //app.use(express.static(path.join(__dirname + "/public")));
 app.use(express.static("public"));
@@ -35,21 +33,23 @@ app.get("/", function (req, res) {
 });
 
 app.post("/api/shorturl", function (req, res) {
-  const Address = req.body.url;
+  const Address = req.body.url.replace(/\/$/, "");
   if (Address === "") return res.json({ error: "invalid url" });
-  const shorUrl = getRandomInt(9999);
 
   const dominio = obtenerDominioDesdeURL2(Address).replace(/\/$/, "");
-  console.log(dominio);
 
   esDominioValido(dominio)
     .then(() => {
       //console.log(`El dominio ${dominio} es válido.`);
-      let object = { [`${shorUrl}`]: { url: Address.replace(/\/$/, "") } };
-      objectShort = object;
+      //let object = { [`${shorUrl}`]: { url: Address.replace(/\/$/, "") } };
+      //objectShort = object;
+      //console.log(objectShort);
+      const shorUrl = getRandomInt(9999);
+      let element = verificarYAgregarUrl(urlsObjeto, shorUrl, Address);
+
       res.json({
-        original_url: Address.replace(/\/$/, ""),
-        short_url: shorUrl,
+        original_url: element.url,
+        short_url: element.id,
       });
     })
     .catch(() => {
@@ -62,8 +62,11 @@ app.post("/api/shorturl", function (req, res) {
 
 app.get("/api/shorturl/:short", function (req, res) {
   const { short } = req.params;
+  console.log(short);
+  const element = urlsObjeto.url.find((item) => item.id == short);
+  if (element === undefined) return res.json({ error: "invalid url" });
 
-  res.redirect(objectShort[short].url);
+  res.redirect(element.url);
 });
 
 app.get("*", (req, res) => {
@@ -75,4 +78,14 @@ app.listen(port, function () {
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
+}
+
+function verificarYAgregarUrl(object, id, url) {
+  let urlExistente = object.url.find((item) => item.url === url);
+  if (urlExistente) {
+    return urlExistente;
+  } else {
+    object.url.push({ id, url });
+    return object.url.find((item) => item.url === url);
+  }
 }
