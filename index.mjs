@@ -39,13 +39,13 @@ app.post("/api/shorturl", function (req, res) {
   if (Address === "") return res.json({ error: "invalid url" });
   const shorUrl = getRandomInt(9999);
 
-  // const dominio = obtenerDominioDesdeURL2(Address);
-  // console.log(dominio);
+  const dominio = obtenerDominioDesdeURL2(Address).replace(/\/$/, "");
+  console.log(dominio);
 
-  esDominioValido(Address)
+  esDominioValido(dominio)
     .then(() => {
       //console.log(`El dominio ${dominio} es válido.`);
-      let object = { [`${shorUrl}`]: { url: Address } };
+      let object = { [`${shorUrl}`]: { url: Address.replace(/\/$/, "") } };
       objectShort = object;
       res.json({
         original_url: Address.replace(/\/$/, ""),
