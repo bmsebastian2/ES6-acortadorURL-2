@@ -8,12 +8,12 @@ import * as url from "url";
 import bodyParser from "body-parser";
 
 const app = express();
-app.use(cors());
+app.use(cors({ optionsSuccessStatus: 200 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 const port = process.env.PORT || 3000;
 
 const options = {
-  family: 6,
+  family: 6, 
   hints: dns.ADDRCONFIG | dns.V4MAPPED,
 };
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
