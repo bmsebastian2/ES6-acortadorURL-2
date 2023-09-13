@@ -1,5 +1,6 @@
 import { main } from "./mongoConexion.mjs";
 import { makeSchema } from "./modeloMongo.mjs";
+//import { Query } from "mongoose";
 let mongoose;
 main()
   .then((mong) => {
@@ -7,6 +8,9 @@ main()
     console.log("CONEXION Y SCHEMA OK");
   })
   .catch((err) => console.log(err));
+
+// const query = new Query();
+// const queryUrl = mongoose.where({ color: "white" });
 
 export function newUrl(original, short) {
   const newuRL = new mongoose({
@@ -35,10 +39,45 @@ export function findUrl(url, res) {
     });
 }
 
-export function findId() {
-  null;
+export function findId(shorlurl, res) {
+  findShort(shorlurl)
+    .then(({ original_url }) => res.redirect(original_url))
+    .catch((err) => {
+      res.json({
+        error: "No short URL found for the given input",
+      });
+    });
 }
 
 function getRandomInt() {
   return Math.floor(Math.random() * 999);
+}
+
+function find(res) {
+  return new Promise((resolve, reject) => {
+    mongoose
+      .find({
+        original_url: res, // search query
+      })
+      .then((doc) => {
+        resolve(doc[0]);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+function findShort(shorlurl) {
+  return new Promise((resolve, reject) => {
+    mongoose
+      .find({
+        short_url: shorlurl, // search query
+      })
+      .then((doc) => {
+        resolve(doc[0]);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }

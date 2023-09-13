@@ -8,7 +8,7 @@ import {
 import { esDominioValido } from "./esDominioValido.mjs";
 import * as url from "url";
 import bodyParser from "body-parser";
-import { newUrl, findUrl } from "./CRUDmongoose.mjs";
+import { findId, findUrl } from "./CRUDmongoose.mjs";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,16 +31,12 @@ app.post("/api/shorturl", async function (req, res) {
   const dominio = obtenerDominioDesdeURL2(Address).replace(/\/$/, "");
   esDominioValido(dominio).catch(() => res.json({ error: "invalid url" }));
 
-  findUrl(obtenerDominioDesdeURL(Address), res);
+  findUrl(Address, res);
 });
 
 app.get("/api/shorturl/:short", function (req, res) {
   const { short } = req.params;
-  console.log(short);
-  const element = urlsObjeto.url.find((item) => item.id == short);
-  if (element === undefined) return res.json({ error: "invalid url" });
-
-  res.redirect(element.url);
+  findId(short, res);
 });
 
 app.get("*", (req, res) => {
@@ -50,12 +46,12 @@ app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
 
-function verificarYAgregarUrl(object, id, url) {
-  let urlExistente = object.url.find((item) => item.url === url);
-  if (urlExistente) {
-    return urlExistente;
-  } else {
-    object.url.push({ id, url });
-    return object.url.find((item) => item.url === url);
-  }
-}
+// function verificarYAgregarUrl(object, id, url) {
+//   let urlExistente = object.url.find((item) => item.url === url);
+//   if (urlExistente) {
+//     return urlExistente;
+//   } else {
+//     object.url.push({ id, url });
+//     return object.url.find((item) => item.url === url);
+//   }
+// }
