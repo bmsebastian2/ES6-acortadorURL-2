@@ -1,6 +1,5 @@
 import { main } from "./mongoConexion.mjs";
 import { makeSchema } from "./modeloMongo.mjs";
-//import { Query } from "mongoose";
 let mongoose;
 main()
   .then((mong) => {
@@ -9,8 +8,7 @@ main()
   })
   .catch((err) => console.log(err));
 
-// const query = new Query();
-// const queryUrl = mongoose.where({ color: "white" });
+
 
 export function newUrl(original, short) {
   const newuRL = new mongoose({

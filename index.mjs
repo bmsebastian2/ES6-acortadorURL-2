@@ -1,10 +1,7 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
-import {
-  obtenerDominioDesdeURL,
-  obtenerDominioDesdeURL2,
-} from "./obtenerDominioDesdeURL.mjs";
+import { obtenerDominioDesdeURL2 } from "./obtenerDominioDesdeURL.mjs";
 import { esDominioValido } from "./esDominioValido.mjs";
 import * as url from "url";
 import bodyParser from "body-parser";
@@ -45,13 +42,3 @@ app.get("*", (req, res) => {
 app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
-
-// function verificarYAgregarUrl(object, id, url) {
-//   let urlExistente = object.url.find((item) => item.url === url);
-//   if (urlExistente) {
-//     return urlExistente;
-//   } else {
-//     object.url.push({ id, url });
-//     return object.url.find((item) => item.url === url);
-//   }
-// }
